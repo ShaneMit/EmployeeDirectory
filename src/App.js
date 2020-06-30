@@ -71,22 +71,34 @@ class App extends Component {
     super(props)
     this.state = {
       input: '',
-
+      filteredEmployees: []
     }
   }
 
   onChangeHandler = e => {
-    this.setState({input: e.target.value})
+
     console.log(e.target.value)
+    const newFilteredEmployees = employeeData.filter(employee => {
+      return employee.first_name.toLowerCase().includes(e.target.value.toLowerCase())
+    })
+    console.log(newFilteredEmployees)
+    
+    this.setState({ input: e.target.value, filteredEmployees: newFilteredEmployees })
   }
 
   render() {
+    let finalEmployees
+    if (this.state.filteredEmployees.length > 0) {
+      finalEmployees = this.state.filteredEmployees
+    } else {
+      finalEmployees = employeeData
+    }
     return (
       <>
       <label htmlFor="search">Search</label>
       <input type="text" onChange={this.onChangeHandler}/>
       <div style={{display: 'flex', flexWrap:'wrap', padding: '20px'}}>
-        {employeeData.map(employee => {
+          {finalEmployees.map(employee => {
           return <EmployeeInfo firstName={employee.first_name} lastName={employee.last_name} department={employee.department} email={employee.email} />
         })}
       </div>
